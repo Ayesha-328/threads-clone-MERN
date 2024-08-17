@@ -27,7 +27,7 @@ cloudinary.config({
 
 // Middlewares => The funcs that run between req and res
 app.use(cors({
-  origin: '',
+  origin: 'https://threads-clone-mern-frontend.vercel.app',
   credentials: true,
 }));
 
