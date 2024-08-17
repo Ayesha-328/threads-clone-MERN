@@ -7,7 +7,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import conversationsAtom, { readUnreadMessageAtom, selectedConversationAtom } from '../atoms/messagesAtom'
 import userAtom from "../atoms/userAtom"
 import { useSocket } from './../context/SocketContext'
-import MessageSound from '../assets/sound/message.mp3'
 
 const MessageContainer = () => {
     const showToast = useShowToast()

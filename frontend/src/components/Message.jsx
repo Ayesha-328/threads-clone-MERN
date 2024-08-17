@@ -9,7 +9,6 @@ import { AiFillDelete } from "react-icons/ai";
 import useShowToast from "../hooks/useShowToast"
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import conversationsAtom from "../atoms/messagesAtom";
-import Conversation from "../../../server/models/conversationModel";
 
 const Message = ({ ownMessage, message, setMessages }) => {
 	// const selectedConversation = useRecoilValue(selectedConversationAtom);
