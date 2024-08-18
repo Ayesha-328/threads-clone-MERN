@@ -38,6 +38,11 @@ app.use(cookieParser()); //Allow us to get the cookie from req and set the cooki
 
 // Routes
 
+// Example route
+app.get('/api/hello', (req, res) => {
+  res.send('Hello, world!');
+});
+
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
 app.use("/api/messages", messageRoutes)
