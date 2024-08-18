@@ -8,7 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
-		origin: "https://threads-clone-mern-frontend.vercel.app",
+		origin: "https://threads-clone-mern-4jmx6dmr8-ayesha-328s-projects.vercel.app",
 		methods: ["GET", "POST"],
 	},
 });
