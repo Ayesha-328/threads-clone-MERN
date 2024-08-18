@@ -41,6 +41,7 @@ const CreatePost = () => {
     const showToast= useShowToast()
     const [posting, setPosting] = useState(false)
 const [posts, setPosts] = useRecoilState(postsAtom)
+const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleChange = (e)=>{
         const inputText = e.target.value;
@@ -58,8 +59,9 @@ const [posts, setPosts] = useRecoilState(postsAtom)
     const handleCreatePost = async (e)=>{
         setPosting(true)
         try {
-            const res= await fetch("/api/posts/create",{
+            const res= await fetch(`${apiUrl}/posts/create/`,{
                 method:"POST",
+                credentials: "include",
                 headers:{
                     "Content-Type":"application/json"
                 },

@@ -6,12 +6,14 @@ import useLogout from '../hooks/useLogout'
 const SettingsPage = () => {
     const showToast = useShowToast
     const logout=useLogout()
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleFreezeAccount = async()=>{
         if(!window.confirm("Are you sure you want to freeze your account")) return 
         try {
-            const res = await fetch("/api/users/freeze",{
+            const res = await fetch(`${apiUrl}/users/freeze`,{
                 method:"PUT",
+                credentials: "include", // This will send cookies with the request
                 headers:{
                     "Content-Type": "application/json"
                 }

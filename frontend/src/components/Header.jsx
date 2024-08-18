@@ -27,9 +27,10 @@ const Header = () => {
   useEffect(() => {
     socket?.on("newMessage", (message) => {
         if (!message.seen && selectedConversation._id !== message.conversationId ) {
+          console.log('selected conversation'+ selectedConversation._id)
+          console.log('message.conversaion'+ message.conversationId)
             setUnreadMessageCount(prev => prev + 1);
-            const sound = new Audio(MessageSound);
-            sound.play();
+           
         }
     });
 }, [socket]);

@@ -8,6 +8,7 @@ const useFollowUnfollow = (user) => {
     const currentUser = useRecoilValue(userAtom); //logged in user
 const [following,setFollowing] = useState(user.followers.includes(currentUser?._id))
 const [updating, setUpdating] = useState(false);
+const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleFollowUnfollow = async()=>{
         if(!currentUser){
@@ -18,8 +19,9 @@ const [updating, setUpdating] = useState(false);
         setUpdating(true);
         if(updating) return; //if updating and user clicks the button again then return
         try {
-            const res= await fetch(`/api/users/follow/${user._id}`,{
+            const res= await fetch(`${apiUrl}/users/follow/${user._id}`,{
                 method:"POST",
+                credentials: "include", // This will send cookies with the request
                 headers:{
 "Content-Type": "application/json",
                 }

@@ -7,7 +7,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import conversationsAtom, { readUnreadMessageAtom, selectedConversationAtom } from '../atoms/messagesAtom'
 import userAtom from "../atoms/userAtom"
 import { useSocket } from './../context/SocketContext'
-
+import MessageSound from '../assets/sound/message.mp3'
 const MessageContainer = () => {
     const showToast = useShowToast()
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom)
@@ -19,6 +19,7 @@ const MessageContainer = () => {
     const setConversations = useSetRecoilState(conversationsAtom)
     const messageEndRef = useRef(null)
     const [unreadMessagesCount , setUnreadMessageCount] = useRecoilState(readUnreadMessageAtom)
+    const apiUrl = import.meta.env.VITE_API_URL;
 
 
     useEffect(() => {
@@ -28,8 +29,13 @@ const MessageContainer = () => {
             const isCurrentPageChat = window.location.pathname.includes('/chat');
     
             // If the message is from the current conversation, add it to the messages
-            if (isCurrentConversation) {
-                setMessages(prev => [...prev, message])
+            // if (isCurrentConversation) {
+            //     setMessages(prev => [...prev, message])
+            // }
+
+            if(!isCurrentConversation || !isUserFocused || !isCurrentPageChat){
+                const sound = new Audio(MessageSound);
+                sound.play();
             }
 
     
@@ -67,7 +73,9 @@ const MessageContainer = () => {
             setMessages([])
             try {
                 if (selectedConversation.mock) return
-                const res = await fetch(`/api/messages/${selectedConversation.userId}`)
+                const res = await fetch(`${apiUrl}/messages/${selectedConversation.userId}`,{
+                    credentials: "include", // This will send cookies with the request
+                })
                 const data = await res.json();
                 if (data.error) {
                     showToast("Error", data.error, "error", 5000)

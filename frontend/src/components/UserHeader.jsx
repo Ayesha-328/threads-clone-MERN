@@ -12,7 +12,8 @@ import {
     MenuList,
     MenuItem,
     useToast,
-    Button
+    Button,
+    useColorModeValue
 } from '@chakra-ui/react'
 import { BsInstagram } from 'react-icons/bs'
 import { CgMoreO } from 'react-icons/cg'
@@ -44,7 +45,7 @@ const {handleFollowUnfollow, updating, following} = useFollowUnfollow(user)
                     <Text fontSize={"2xl"} fontWeight={"bold"} textTransform={"capitalize"}>{user.name}</Text>
                     <Flex gap={2} alignItems={"center"}>
                         <Text fontSize={"sm"}>{user.username}</Text>
-                        <Text fontSize={{base:"xs",md:"sm",'lg':"md"}} bg={"gray.dark"} color={"gray.light"} px={2} py={1} borderRadius={"full"}>
+                        <Text fontSize={{base:"xs",md:"sm",'lg':"md"}} bg={useColorModeValue("gray.300","gray.dark")} color={"gray.light"} px={2} py={1} borderRadius={"full"}>
                             threads.net
                         </Text>
                     </Flex>

@@ -31,6 +31,7 @@ export default function SignupCard() {
     email:"",
     password: ""
   })
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleChange=(e)=>{
     const {name,value}= e.target;
@@ -44,7 +45,7 @@ export default function SignupCard() {
 
   const handleSignup = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/users/signup", {
+      const res = await fetch(`${apiUrl}/users/signup/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -62,10 +63,10 @@ export default function SignupCard() {
 
       localStorage.setItem("user-threads", JSON.stringify(data))
 
-      showToast("Successfully logged in","","success",5000)
+      showToast("Successfully signed up","","success",5000)
       
     } catch (error) {
-      console.error('Error fetching or parsing data:', error);
+      showToast("Error",error.message,"error",5000)
     }
   }
 

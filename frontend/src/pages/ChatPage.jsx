@@ -31,6 +31,7 @@ const ChatPage = () => {
     const currentUser = useRecoilValue(userAtom)
     const { socket, onlineUsers } = useSocket()
     const unreadMessagesCount = useRecoilValue(readUnreadMessageAtom)
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         socket?.on("messagesSeen", ({ conversationId }) => {
@@ -54,7 +55,9 @@ const ChatPage = () => {
     useEffect(() => {
         const getConversations = async () => {
             try {
-                const res = await fetch("/api/messages/conversations")
+                const res = await fetch(`${apiUrl}/messages/conversations`,{
+                    credentials: "include", // This will send cookies with the request
+                })
                 const data = await res.json();
                 if (data.error) {
                     showToast("Error", data.error, "error", 5000)
@@ -76,7 +79,9 @@ const ChatPage = () => {
         e.preventDefault();
         setSearchingUser(true);
         try {
-            const res = await fetch(`/api/users/profile/${searchText}`)
+            const res = await fetch(`${apiUrl}/users/profile/${searchText}`,{
+                credentials: "include", // This will send cookies with the request
+            })
             const searchUser = await res.json()
 
             if (searchUser.error) {

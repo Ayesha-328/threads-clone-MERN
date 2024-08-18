@@ -17,7 +17,7 @@ const Message = ({ ownMessage, message, setMessages }) => {
 	const showToast= useShowToast()
 	const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom);
     const [conversations,setConversations] = useRecoilState(conversationsAtom);
-
+	const apiUrl = import.meta.env.VITE_API_URL;
 	// Format the message time
 	const formattedTime = format(new Date(message.createdAt), "h:mm a"); // Example using date-fns
 
@@ -25,7 +25,7 @@ const Message = ({ ownMessage, message, setMessages }) => {
 		if (!window.confirm("Are you sure you want to delete this message for everyone?")) return;
 		
 		try {
-			const res = await fetch(`/api/messages/${message._id}`, {
+			const res = await fetch(`${apiUrl}/messages/${message._id}`, {
 				method: "DELETE",
 			});
 	

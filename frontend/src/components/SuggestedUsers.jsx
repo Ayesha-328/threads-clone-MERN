@@ -7,12 +7,15 @@ const SuggestedUsers = () => {
     const[loading, setLoading] = useState(true)
     const[suggestedUsers, setSuggestedUsers] = useState([])
     const showToast = useShowToast()
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     useEffect(()=>{
         const getSuggestedUsers = async()=>{
             setLoading(true);
             try {
-                const res= await fetch("/api/users/suggested");
+                const res= await fetch(`${apiUrl}/users/suggested`,{
+                    credentials: "include", // This will send cookies with the request
+                });
                 const data = await res.json();
 
                 if(data.error){

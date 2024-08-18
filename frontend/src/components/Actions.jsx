@@ -28,6 +28,7 @@ const Actions = ({post}) => {
 	const [isLiking, setIsLiking] = useState(false);
 	const [isReplying, setIsReplying] = useState(false);
 	const [reply, setReply] = useState("");
+	const apiUrl = import.meta.env.VITE_API_URL;
 
 	const showToast = useShowToast();
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,8 +38,9 @@ const Actions = ({post}) => {
 		if (isLiking) return;
 		setIsLiking(true);
 		try {
-			const res = await fetch("/api/posts/like/" + post._id, {
+			const res = await fetch(`${apiUrl}/posts/like/${post._id}` , {
 				method: "PUT",
+				credentials: "include", // This will send cookies with the request
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -82,8 +84,9 @@ const Actions = ({post}) => {
 		if (isReplying) return;
 		setIsReplying(true);
 		try {
-			const res = await fetch("/api/posts/reply/" + post._id, {
+			const res = await fetch(`${apiUrl}/posts/reply/${post._id}` , {
 				method: "PUT",
+				credentials: "include", // This will send cookies with the request
 				headers: {
 					"Content-Type": "application/json",
 				},

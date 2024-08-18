@@ -33,18 +33,19 @@ const PostPage = () => {
   const currentUser = useRecoilValue(userAtom)
   const navigate = useNavigate()
   const currentPost = posts[0]
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(()=>{
     const getPost = async () => {
       setPosts([])
       try {
-        const res = await fetch(`/api/posts/${pid}`);
+        const res = await fetch(`${apiUrl}/posts/${pid}`);
         const data = await res.json();
         if(data.error){
           showToast('Error', error.message, 'error', 5000);
           return
         }
-        console.log(data)
+      
         setPosts([data]);
       } catch (error) {
         showToast('Error', error.message, 'error', 5000);
@@ -59,7 +60,7 @@ const PostPage = () => {
   const handleDeletePost = async()=>{
     if(!window.confirm("Are you sure you want to delete this post?")) return 
     try {
-        const res = await fetch(`/api/posts/${currentPost._id}`,{
+        const res = await fetch(`${apiUrl}/posts/${currentPost._id}`,{
             method:"DELETE", 
         }) 
         const data = await res.json()

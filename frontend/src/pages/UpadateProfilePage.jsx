@@ -33,6 +33,7 @@ export default function UpdateProfilePage() {
     const fileRef = useRef(null);
     const showToast = useShowToast() 
     const [updating, setUpdating] = useState(false);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const {handleImageChange,imgUrl} = usePreviewImg()
 
@@ -49,8 +50,9 @@ export default function UpdateProfilePage() {
       if(updating) return;
       setUpdating(true);
       try {
-        const res = await fetch(`/api/users/update/${user._id}`, {
+        const res = await fetch(`${apiUrl}/users/update/${user._id}`, {
           method: "PUT",
+          credentials: "include", // This will send cookies with the request
           headers: {
             "Content-Type": "application/json",
           },

@@ -27,7 +27,7 @@ cloudinary.config({
 
 // Middlewares => The funcs that run between req and res
 app.use(cors({
-  origin: '',
+  origin: 'http://localhost:3000',
   credentials: true,
 }));
 

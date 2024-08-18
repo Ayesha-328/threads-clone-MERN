@@ -32,6 +32,7 @@ import useShowToast from '../hooks/useShowToast'
       username:"",
       password: ""
     })
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const handleChange=(e)=>{
       const {name,value}= e.target;
@@ -44,8 +45,9 @@ import useShowToast from '../hooks/useShowToast'
     const handleLogin =async()=>{
       setLoading(true)
       try {
-          const res =await fetch("/api/users/login",{
+          const res =await fetch(`${apiUrl}/users/login`,{
               method: "POST",
+              credentials: 'include',
               headers: {
                   "Content-Type": "application/json",
               },

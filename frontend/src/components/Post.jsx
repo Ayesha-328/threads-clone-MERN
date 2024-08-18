@@ -16,6 +16,7 @@ import {formatDistanceToNowStrict} from 'date-fns'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import userAtom from '../atoms/userAtom'
 import postsAtom from '../atoms/postsAtom'
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Post = ({ post,userId }) => {
     const showToast= useShowToast()
@@ -28,7 +29,7 @@ const Post = ({ post,userId }) => {
     useEffect(()=>{
         const getUser = async()=>{
             try {
-              const res = await fetch(`/api/users/profile/${userId}`) 
+              const res = await fetch(`${apiUrl}/users/profile/${userId}`) 
               const data = await res.json()
               if(data.error){
                 showToast("Error",data.error,"error",5000)
@@ -48,8 +49,9 @@ const Post = ({ post,userId }) => {
         e.preventDefault()
         if(!window.confirm("Are you sure you want to delete this post?")) return 
         try {
-            const res = await fetch(`/api/posts/${post._id}`,{
+            const res = await fetch(`${apiUrl}/posts/${post._id}`,{
                 method:"DELETE", 
+                credentials:'include'
             }) 
             const data = await res.json()
             if(data.error){
@@ -86,7 +88,7 @@ const Post = ({ post,userId }) => {
                         {post.replies[0] && (
                             <Avatar
                             size="xs"
-                            name="John doe"
+                            name={post.replies[0].username}
                             src={post.replies[0].userProfilePic}
                             position={"absolute"}
                             top={"0px"}
@@ -97,7 +99,7 @@ const Post = ({ post,userId }) => {
                         {post.replies[1] && (
                              <Avatar
                              size="xs"
-                             name="John doe"
+                             name={post.replies[1].username}
                              src={post.replies[1].userProfilePic}
                              position={"absolute"}
                              bottom={"0px"}
@@ -108,7 +110,7 @@ const Post = ({ post,userId }) => {
                         {post.replies[2] && (
                             <Avatar
                             size="xs"
-                            name="John doe"
+                            name={post.replies[2].username}
                             src={post.replies[2].userProfilePic}
                             position={"absolute"}
                             bottom={"0px"}

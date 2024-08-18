@@ -19,6 +19,7 @@ import {
 
 const Comment = ({reply}) => {
     const [liked, setLiked] = useState(false);
+    
     return (
         <>
             <Divider />
@@ -41,7 +42,7 @@ const Comment = ({reply}) => {
 
                     </Link>
                     <Flex gap={4} alignItems={"center"} onClick={(e) => e.preventDefault()}>
-                        <Text fontSize={"xs"} width={36} textAlign={'right'} color={"gray.light"} >{formatDistanceToNowStrict(new Date(reply.createdAt))}</Text>
+                        <Text fontSize={"xs"} width={36} textAlign={'right'} color={"gray.light"} >{reply.createdAt && formatDistanceToNowStrict(new Date(reply.createdAt))}</Text>
                         {/* <Menu>
                             <MenuButton>
                                 <BsThreeDots />

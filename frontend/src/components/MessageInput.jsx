@@ -31,6 +31,7 @@ const MessageInput = ({ setMessages }) => {
   const { onClose } = useDisclosure()
   const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg()
   const [isSending, setIsSending] = useState(false)
+  const apiUrl = import.meta.env.VITE_API_URL;
 
 
   const handleSendMessage = async (e) => {
@@ -40,8 +41,9 @@ const MessageInput = ({ setMessages }) => {
 
     setIsSending(true)
     try {
-      const res = await fetch("/api/messages/", {
+      const res = await fetch(`${apiUrl}/messages/`, {
         method: "POST",
+        credentials: "include", // This will send cookies with the request
         headers: {
           "Content-Type": "application/json"
         },

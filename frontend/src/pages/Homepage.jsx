@@ -10,18 +10,21 @@ const HomePage = () => {
 	const [posts, setPosts] = useRecoilState(postsAtom);
 	const [loading, setLoading] = useState(true);
 	const showToast = useShowToast();
+	const apiUrl = import.meta.env.VITE_API_URL;
+
 	useEffect(() => {
 		const getFeedPosts = async () => {
 			setLoading(true);
 			setPosts([]);
 			try {
-				const res = await fetch("/api/posts/feed");
+				const res = await fetch(`${apiUrl}/posts/feed`,{
+					credentials: "include", // This will send cookies with the request
+				});
 				const data = await res.json();
 				if (data.error) {
 					showToast("Error", data.error, "error");
 					return;
 				}
-				console.log(data);
 				setPosts(data);
 			} catch (error) {
 				showToast("Error", error.message, "error");
