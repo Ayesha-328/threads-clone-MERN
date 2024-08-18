@@ -15,6 +15,7 @@ export const SocketContextProvider = ({ children }) => {
 	const user = useRecoilValue(userAtom);
 
 	useEffect(() => {
+		console.log( 'userId' + user._id)
 		const socket = io("https://threads-clone-mern-ayesha-328s-projects.vercel.app", {
     query: {
       userId: user?._id,
