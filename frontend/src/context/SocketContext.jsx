@@ -16,7 +16,7 @@ export const SocketContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		console.log( 'userId' + user._id)
-		const socket = io("https://threads-clone-mern-ayesha-328s-projects.vercel.app", {
+		const socket = io("https://threads-clone-mern.vercel.app", {
     query: {
       userId: user?._id,
     },
