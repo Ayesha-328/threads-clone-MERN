@@ -19,8 +19,7 @@ export const SocketContextProvider = ({ children }) => {
 		const socket = io("https://threads-clone-mern-ayesha-328s-projects.vercel.app", {
     query: {
       userId: user?._id,
-    },
-    withCredentials: true, // Add this to include credentials with the request
+    }
   });
 
 		setSocket(socket);
