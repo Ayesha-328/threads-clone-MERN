@@ -15,80 +15,81 @@ const io = new Server(server, {
 });
 
 export const getRecipientSocketId = (recipientId) => {
-	return userSocketMap[recipientId];
+    return userSocketMap[recipientId] ? [...userSocketMap[recipientId]] : [];
 };
 
-const userSocketMap = {}; // userId: socketId
+const userSocketMap = {}; // userId: Set of socketIds
 
-io.on("connection", (socket) => {
-	console.log("user connected", socket.id);
-	const userId = socket.handshake.query.userId;
+io.on('connection', (socket) => {
+    console.log("user connected", socket.id);
+    const userId = socket.handshake.query.userId;
+    if (userId) {
+        if (!userSocketMap[userId]) {
+            userSocketMap[userId] = new Set();
+        }
+        userSocketMap[userId].add(socket.id);
+    }
+    io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast online users
 
-	if (userId != "undefined") userSocketMap[userId] = socket.id;
-	io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
-	socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
+    socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
 		try {
 			await Message.updateMany({ conversationId: conversationId, seen: false }, { $set: { seen: true } });
-			await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
-			io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
+            await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
+            
+
+            // Get all socket IDs associated with the user
+             const recipientSockets = [...userSocketMap[userId]];
+			// io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
+            recipientSockets.forEach(socketId => {
+                io.to(socketId).emit("messagesSeen", { conversationId });
+            });
 		} catch (error) {
 			console.log(error);
 		}
 	});
 
-	socket.on("disconnect", () => {
-		console.log("user disconnected");
-		delete userSocketMap[userId];
-		io.emit("getOnlineUsers", Object.keys(userSocketMap));
-	});
+    socket.on('disconnect', () => {
+        console.log("user disconnected", socket.id);
+        if (userId) {
+            userSocketMap[userId].delete(socket.id);
+            if (userSocketMap[userId].size === 0) {
+                delete userSocketMap[userId];
+            }
+            io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Update online users
+        }
+    });
 });
 
 export { io, server, app };
 
 
+
 // export const getRecipientSocketId = (recipientId) => {
-//     return userSocketMap[recipientId] ? [...userSocketMap[recipientId]] : [];
+// 	return userSocketMap[recipientId];
 // };
 
-// const userSocketMap = {}; // userId: Set of socketIds
+// const userSocketMap = {}; // userId: socketId
 
-// io.on('connection', (socket) => {
-//     console.log("user connected", socket.id);
-//     const userId = socket.handshake.query.userId;
-//     if (userId) {
-//         if (!userSocketMap[userId]) {
-//             userSocketMap[userId] = new Set();
-//         }
-//         userSocketMap[userId].add(socket.id);
-//     }
-//     io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast online users
+// io.on("connection", (socket) => {
+// 	console.log("user connected", socket.id);
+// 	const userId = socket.handshake.query.userId;
 
-//     socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
+// 	if (userId != "undefined") userSocketMap[userId] = socket.id;
+// 	io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
+// 	socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
 // 		try {
 // 			await Message.updateMany({ conversationId: conversationId, seen: false }, { $set: { seen: true } });
-//             await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
-            
-
-//             // Get all socket IDs associated with the user
-//              const recipientSockets = [...userSocketMap[userId]];
-// 			// io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
-//             recipientSockets.forEach(socketId => {
-//                 io.to(socketId).emit("messagesSeen", { conversationId });
-//             });
+// 			await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
+// 			io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
 // 		} catch (error) {
 // 			console.log(error);
 // 		}
 // 	});
 
-//     socket.on('disconnect', () => {
-//         console.log("user disconnected", socket.id);
-//         if (userId) {
-//             userSocketMap[userId].delete(socket.id);
-//             if (userSocketMap[userId].size === 0) {
-//                 delete userSocketMap[userId];
-//             }
-//             io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Update online users
-//         }
-//     });
+// 	socket.on("disconnect", () => {
+// 		console.log("user disconnected");
+// 		delete userSocketMap[userId];
+// 		io.emit("getOnlineUsers", Object.keys(userSocketMap));
+// 	});
 // });
