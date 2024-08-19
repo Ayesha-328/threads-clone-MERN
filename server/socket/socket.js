@@ -10,8 +10,10 @@ const io = new Server(server, {
 	cors: {
 		origin: "https://threads-clone-mern-ayesha.vercel.app",
 		methods: ["GET", "POST"],
-		credentials: true
-	},
+		credentials: true,
+		transports: ['websocket', 'polling'],
+        },
+        allowEIO3: true
 });
 
 export const getRecipientSocketId = (recipientId) => {
