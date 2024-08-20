@@ -22,45 +22,47 @@ export const getRecipientSocketId = (recipientId) => {
 
 const userSocketMap = {}; // userId: Set of socketIds
 
-io.on('connection', (socket) => {
-    console.log("user connected", socket.id);
-    const userId = socket.handshake.query.userId;
-    if (userId) {
-        if (!userSocketMap[userId]) {
-            userSocketMap[userId] = new Set();
-        }
-        userSocketMap[userId].add(socket.id);
-    }
-    io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast online users
+// Commented out because of deployment isssues on vercel ( not supporting real-time updates i.e websocket)
 
-    socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
-		try {
-			await Message.updateMany({ conversationId: conversationId, seen: false }, { $set: { seen: true } });
-            await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
+// io.on('connection', (socket) => {
+//     console.log("user connected", socket.id);
+//     const userId = socket.handshake.query.userId;
+//     if (userId) {
+//         if (!userSocketMap[userId]) {
+//             userSocketMap[userId] = new Set();
+//         }
+//         userSocketMap[userId].add(socket.id);
+//     }
+//     io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Broadcast online users
+
+//     socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
+// 		try {
+// 			await Message.updateMany({ conversationId: conversationId, seen: false }, { $set: { seen: true } });
+//             await Conversation.updateOne({ _id: conversationId }, { $set: { "lastMessage.seen": true } });
             
 
             // Get all socket IDs associated with the user
-             const recipientSockets = [...userSocketMap[userId]];
-			// io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
-            recipientSockets.forEach(socketId => {
-                io.to(socketId).emit("messagesSeen", { conversationId });
-            });
-		} catch (error) {
-			console.log(error);
-		}
-	});
+ //             const recipientSockets = [...userSocketMap[userId]];
+	// 		// io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
+ //            recipientSockets.forEach(socketId => {
+ //                io.to(socketId).emit("messagesSeen", { conversationId });
+ //            });
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// });
 
-    socket.on('disconnect', () => {
-        console.log("user disconnected", socket.id);
-        if (userId) {
-            userSocketMap[userId].delete(socket.id);
-            if (userSocketMap[userId].size === 0) {
-                delete userSocketMap[userId];
-            }
-            io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Update online users
-        }
-    });
-});
+ //    socket.on('disconnect', () => {
+ //        console.log("user disconnected", socket.id);
+ //        if (userId) {
+//             userSocketMap[userId].delete(socket.id);
+//             if (userSocketMap[userId].size === 0) {
+//                 delete userSocketMap[userId];
+//             }
+//             io.emit("getOnlineUsers", Object.keys(userSocketMap)); // Update online users
+//         }
+//     });
+// });
 
 export { io, server, app };
 
